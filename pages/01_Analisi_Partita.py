@@ -43,11 +43,13 @@ if file_caricato is None:
     st.stop()
 
 try:
-    # IMPORTANTE: NON usare open() su un UploadedFile. 
-    # Pandas sa leggere direttamente l'oggetto file di Streamlit.
+    # sep=None con engine='python' permette a Pandas di rilevare automaticamente il separatore
     df_storico_grezzo = pd.read_csv(file_caricato, sep=None, engine='python', encoding='utf-8-sig')
     
-    # Normalizzazione nomi colonne (aggiungi qui i nomi corretti se il tuo CSV è diverso)
+    # Debug rapido: se il file è leggibile ma ha nomi strani, stampiamo le colonne
+    st.write(f"Colonne rilevate: {list(df_storico_grezzo.columns)}")
+    
+    # Normalizzazione nomi colonne
     mapping_colonne = {
         'Div': 'Campionato',
         'Date': 'Data',
@@ -59,17 +61,10 @@ try:
     storico = df_storico_grezzo.rename(columns=mapping_colonne)
     
     st.success(f"Caricate {len(storico)} partite valide.")
-    with st.expander("Vedi anteprima dati"):
-        st.dataframe(storico.head(), use_container_width=True)
-
+    
 except Exception as e:
-    st.error(f"Errore durante la lettura del file: {e}")
-    st.stop()
-    # ... resto del tuo codice ...
-
-except Exception as e:
-    st.error(f"Errore critico: {e}")
-    st.exception(e) 
+    st.error(f"Errore nella lettura del file: {e}")
+    st.write("Verifica se il file è un CSV testuale o un file Excel salvato erroneamente.")
     st.stop()
 # --- A QUI ---
     
