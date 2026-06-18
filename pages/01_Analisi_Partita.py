@@ -22,7 +22,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 
 import config
 import odds_fetcher
-import elo_model  <-- decommenta questi quando avrai caricato anche questi file
+import elo_model
 import poisson_model
 import bankroll_manager
 
