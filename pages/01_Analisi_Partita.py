@@ -42,9 +42,16 @@ if file_caricato is None:
     st.stop()
 
 try:
-    df_storico_grezzo = pd.read_csv(file_caricato)
+    # Aggiungiamo 'sep=None' e 'engine=python' per far capire a Pandas di 
+    # indovinare automaticamente il separatore (virgola, punto e virgola, tab)
+    df_storico_grezzo = pd.read_csv(file_caricato, sep=None, engine='python')
     
-    # --- NUOVA LOGICA DI NORMALIZZAZIONE ---
+    # Debug: mostriamo a video le prime righe se il caricamento riesce
+    if df_storico_grezzo.empty:
+        st.error("Il file CSV sembra essere vuoto.")
+        st.stop()
+    
+    # --- LOGICA DI NORMALIZZAZIONE (come concordato) ---
     mapping_colonne = {
         'Div': 'Campionato',
         'Date': 'Data',
@@ -53,14 +60,17 @@ try:
         'FTHG': 'GolCasa',
         'FTAG': 'GolOspite'
     }
-    # Rinomina solo le colonne che trova nel file
     df_storico_grezzo = df_storico_grezzo.rename(columns=mapping_colonne)
     
-    # Verifica immediata: se la colonna Campionato manca ancora, avvisa l'utente
-    if 'Campionato' not in df_storico_grezzo.columns:
-        st.error(f"Errore: Il file non contiene la colonna 'Campionato'. "
-                 f"Colonne trovate: {list(df_storico_grezzo.columns)}")
-        st.stop()
+    # Assegnazione finale
+    storico = df_storico_grezzo
+    
+    # ... resto del tuo codice ...
+    
+except Exception as e:
+    st.error(f"Errore tecnico durante la lettura del file: {e}")
+    st.write("Verifica se il file è un CSV testuale o un file Excel salvato erroneamente.")
+    st.stop()
     # ---------------------------------------
 
     path_temporaneo = "/tmp/storico_caricato_streamlit.csv"
