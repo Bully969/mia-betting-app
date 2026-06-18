@@ -41,30 +41,27 @@ file_caricato = st.file_uploader("Carica il tuo CSV storico", type=["csv"], key=
 if file_caricato is None:
     st.info("Carica un CSV per procedere con l'analisi.")
     st.stop()
-
 try:
-    # sep=None con engine='python' permette a Pandas di rilevare automaticamente il separatore
     df_storico_grezzo = pd.read_csv(file_caricato, sep=None, engine='python', encoding='utf-8-sig')
     
-    # Debug rapido: se il file è leggibile ma ha nomi strani, stampiamo le colonne
-    st.write(f"Colonne rilevate: {list(df_storico_grezzo.columns)}")
-    
-    # Normalizzazione nomi colonne
+    # 1. Normalizzazione (quella che funziona!)
     mapping_colonne = {
         'Div': 'Campionato',
         'Date': 'Data',
-        'HomeTeam': 'SquadraCasa',
-        'AwayTeam': 'SquadraOspite',
-        'FTHG': 'GolCasa',
-        'FTAG': 'GolOspite'
+        'HomeTeam': 'Squadra casa', # Nota: ho usato lo spazio come nello screenshot
+        'AwayTeam': 'Squadra ospite',
+        'FTHG': 'Gol casa',
+        'FTAG': 'Gol ospite'
     }
     storico = df_storico_grezzo.rename(columns=mapping_colonne)
+    
+    # 2. ELIMINIAMO il pezzo che crasha (non salvare su tmp, non ricaricare)
+    # storico = elo_model.carica_storico(path_temporaneo) # <--- ELIMINA O COMMENTA QUESTA RIGA
     
     st.success(f"Caricate {len(storico)} partite valide.")
     
 except Exception as e:
-    st.error(f"Errore nella lettura del file: {e}")
-    st.write("Verifica se il file è un CSV testuale o un file Excel salvato erroneamente.")
+    st.error(f"Errore: {e}")
     st.stop()
 # --- A QUI ---
     
