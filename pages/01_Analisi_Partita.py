@@ -35,7 +35,7 @@ st.title("📊 Analisi Partita")
 st.header("1. Storico partite")
 # ... (lascia la descrizione invariata)
 
-file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"])
+file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"], key="uplouder_configurazione")
 
 # ... (sopra c'è il resto del codice, st.header, st.caption, ecc.)
 
