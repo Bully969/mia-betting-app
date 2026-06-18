@@ -37,19 +37,36 @@ st.header("1. Storico partite")
 
 file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"])
 
+# ... (sopra c'è il resto del codice, st.header, st.caption, ecc.)
+
+file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"])
+
 if file_caricato is None:
-    st.info("Carica un CSV per procedere.")
+    st.info("Carica un CSV per procedere...")
     st.stop()
 
+# --- COPIA E INCOLLA DA QUI ---
 try:
-    # Aggiungiamo 'sep=None' e 'engine=python' per far capire a Pandas di 
-    # indovinare automaticamente il separatore (virgola, punto e virgola, tab)
-    df_storico_grezzo = pd.read_csv(file_caricato, sep=None, engine='python')
+    with open(file_caricato, 'r', encoding='utf-8') as f:
+        prima_riga = f.readline()
+    st.write(f"DEBUG: Prima riga trovata nel file: {prima_riga}")
+
+    df_storico_grezzo = pd.read_csv(file_caricato, sep=None, engine='python', encoding='utf-8-sig')
     
-    # Debug: mostriamo a video le prime righe se il caricamento riesce
+    st.write(f"DEBUG: Colonne rilevate: {df_storico_grezzo.columns.tolist()}")
+    
     if df_storico_grezzo.empty:
-        st.error("Il file CSV sembra essere vuoto.")
+        st.error("Il file è stato aperto ma risulta vuoto.")
         st.stop()
+        
+    storico = df_storico_grezzo
+    # ... resto del tuo codice ...
+
+except Exception as e:
+    st.error(f"Errore critico: {e}")
+    st.exception(e) 
+    st.stop()
+# --- A QUI ---
     
     # --- LOGICA DI NORMALIZZAZIONE (come concordato) ---
     mapping_colonne = {
