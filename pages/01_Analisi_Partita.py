@@ -14,14 +14,17 @@ arbitraria.
 import streamlit as st
 import sys
 import os
-import pandas as pd
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "modules"))
+# Aggiunge la cartella principale al percorso di ricerca
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Aggiunge la cartella 'modules' al percorso di ricerca
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'modules'))
 
 import config
-import elo_model
-import poisson_model
-import bankroll_manager as bm
+import odds_fetcher
+# import elo_model  <-- decommenta questi quando avrai caricato anche questi file
+# import poisson_model
+# import bankroll_manager
 
 
 st.set_page_config(page_title="Analisi Partita", page_icon="📊", layout="wide")
