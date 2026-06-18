@@ -33,13 +33,47 @@ st.title("📊 Analisi Partita")
 
 # --- Sezione 1: caricamento storico ---
 st.header("1. Storico partite")
-st.caption(
-    "Carica un CSV con colonne: Data, Campionato, SquadraCasa, SquadraOspite, "
-    "GolCasa, GolOspite. Formato data: YYYY-MM-DD."
-)
+# ... (lascia la descrizione invariata)
 
 file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"])
 
+if file_caricato is None:
+    st.info("Carica un CSV per procedere.")
+    st.stop()
+
+try:
+    df_storico_grezzo = pd.read_csv(file_caricato)
+    
+    # --- NUOVA LOGICA DI NORMALIZZAZIONE ---
+    mapping_colonne = {
+        'Div': 'Campionato',
+        'Date': 'Data',
+        'HomeTeam': 'SquadraCasa',
+        'AwayTeam': 'SquadraOspite',
+        'FTHG': 'GolCasa',
+        'FTAG': 'GolOspite'
+    }
+    # Rinomina solo le colonne che trova nel file
+    df_storico_grezzo = df_storico_grezzo.rename(columns=mapping_colonne)
+    
+    # Verifica immediata: se la colonna Campionato manca ancora, avvisa l'utente
+    if 'Campionato' not in df_storico_grezzo.columns:
+        st.error(f"Errore: Il file non contiene la colonna 'Campionato'. "
+                 f"Colonne trovate: {list(df_storico_grezzo.columns)}")
+        st.stop()
+    # ---------------------------------------
+
+    path_temporaneo = "/tmp/storico_caricato_streamlit.csv"
+    df_storico_grezzo.to_csv(path_temporaneo, index=False)
+    storico = elo_model.carica_storico(path_temporaneo)
+    
+    # Importante: ri-assegnamo il df normalizzato anche alla variabile 'storico' 
+    # se la funzione carica_storico non lo fa internamente
+    storico = df_storico_grezzo 
+
+except Exception as e:
+    st.error(f"Errore nel caricamento: {e}")
+    st.stop()
 if file_caricato is None:
     st.info("Carica un CSV per procedere con l'analisi. Il motore non genera dati di esempio: "
             "serve uno storico reale per produrre stime affidabili.")
