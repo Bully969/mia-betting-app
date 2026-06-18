@@ -14,14 +14,13 @@ arbitraria.
 import streamlit as st
 import sys
 import os
-import pandas as pd
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "modules"))
+# Questo comando dice a Python: "Guarda anche nella cartella 'modules'"
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'modules')))
 
-import config
 import elo_model
 import poisson_model
-import bankroll_manager as bm
+import bankroll_manager
 
 
 st.set_page_config(page_title="Analisi Partita", page_icon="📊", layout="wide")
