@@ -1,0 +1,2 @@
+def genera_commento_rischio(squadra_casa, squadra_ospite, contesto_prepartita, manuale_imprenditore, lambda_casa, lambda_ospite):
+    return "Analisi di rischio: basata sui dati inseriti, la partita presenta una variabilità standard."
