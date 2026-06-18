@@ -39,7 +39,7 @@ file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"])
 
 # ... (sopra c'è il resto del codice, st.header, st.caption, ecc.)
 
-file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"])
+file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"], key="uploader_storico")
 
 if file_caricato is None:
     st.info("Carica un CSV per procedere...")
