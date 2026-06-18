@@ -30,7 +30,16 @@ import bankroll_manager
 st.set_page_config(page_title="Analisi Partita", page_icon="📊", layout="wide")
 st.title("📊 Analisi Partita")
 
-
+# Mappa le colonne trovate in quelle attese dal tuo codice
+mapping = {
+    'Data': 'Data',
+    'Campionato': 'Campionato',
+    'Squadra casa': 'SquadraCasa',
+    'Squadra ospite': 'SquadraOspite',
+    'Gol casa': 'GolCasa',
+    'Gol ospite': 'GolOspite'
+}
+storico = df_storico_grezzo.rename(columns=mapping)
 # --- Sezione 1: caricamento storico ---
 # --- Sezione 1: caricamento storico ---
 st.header("1. Storico partite")
