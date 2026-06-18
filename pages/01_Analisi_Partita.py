@@ -70,7 +70,7 @@ st.header("3. Motore quantitativo (Poisson)")
 if st.button("Calcola probabilità", type="primary"):
     try:
         medie = poisson_model.calcola_medie_campionato(storico, campionato_selezionato)
-        forza = poisson_model.calfora_forza_squadre(storico, campionato_selezionato)
+        forza = poisson_model.calcola_forza_squadre(storico, campionato_selezionato)
         lam_casa, lam_ospite = poisson_model.calcola_lambda_partita(forza, medie, squadra_casa, squadra_ospite)
         matrice = poisson_model.matrice_probabilita_risultati(lam_casa, lam_ospite)
         st.session_state["ultima_analisi"] = {
