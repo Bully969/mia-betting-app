@@ -10,7 +10,7 @@ Il prefisso numerico (01_) controlla l'ordine nella sidebar di
 navigazione di Streamlit: è una convenzione del framework, non
 arbitraria.
 """
-
+import pandas as pd
 import streamlit as st
 import sys
 import os
