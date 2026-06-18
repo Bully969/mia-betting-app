@@ -32,34 +32,39 @@ st.title("📊 Analisi Partita")
 
 
 # --- Sezione 1: caricamento storico ---
+# --- Sezione 1: caricamento storico ---
 st.header("1. Storico partite")
-# ... (lascia la descrizione invariata)
 
-file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"], key="uplouder_configurazione")
-
-# ... (sopra c'è il resto del codice, st.header, st.caption, ecc.)
-
-file_caricato = st.file_uploader("Storico partite (CSV)", type=["csv"], key="uploader_storico")
+# Usiamo una sola volta l'uploader con una chiave univoca
+file_caricato = st.file_uploader("Carica il tuo CSV storico", type=["csv"], key="uploader_storico_unico")
 
 if file_caricato is None:
-    st.info("Carica un CSV per procedere...")
+    st.info("Carica un CSV per procedere con l'analisi.")
     st.stop()
 
-# --- COPIA E INCOLLA DA QUI ---
 try:
-    with open(file_caricato, 'r', encoding='utf-8') as f:
-        prima_riga = f.readline()
-    st.write(f"DEBUG: Prima riga trovata nel file: {prima_riga}")
-
+    # IMPORTANTE: NON usare open() su un UploadedFile. 
+    # Pandas sa leggere direttamente l'oggetto file di Streamlit.
     df_storico_grezzo = pd.read_csv(file_caricato, sep=None, engine='python', encoding='utf-8-sig')
     
-    st.write(f"DEBUG: Colonne rilevate: {df_storico_grezzo.columns.tolist()}")
+    # Normalizzazione nomi colonne (aggiungi qui i nomi corretti se il tuo CSV è diverso)
+    mapping_colonne = {
+        'Div': 'Campionato',
+        'Date': 'Data',
+        'HomeTeam': 'SquadraCasa',
+        'AwayTeam': 'SquadraOspite',
+        'FTHG': 'GolCasa',
+        'FTAG': 'GolOspite'
+    }
+    storico = df_storico_grezzo.rename(columns=mapping_colonne)
     
-    if df_storico_grezzo.empty:
-        st.error("Il file è stato aperto ma risulta vuoto.")
-        st.stop()
-        
-    storico = df_storico_grezzo
+    st.success(f"Caricate {len(storico)} partite valide.")
+    with st.expander("Vedi anteprima dati"):
+        st.dataframe(storico.head(), use_container_width=True)
+
+except Exception as e:
+    st.error(f"Errore durante la lettura del file: {e}")
+    st.stop()
     # ... resto del tuo codice ...
 
 except Exception as e:
